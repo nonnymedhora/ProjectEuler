@@ -25,6 +25,12 @@ package org.bawaweb.euler;
  * Find the difference between 
  * the sum of the squares of the first one hundred natural numbers 
  * and the square of the sum.
+ * 
+ * OUTPUT
+ * ----------
+ * Difference between sum-of-squares
+ * and sum-squared for first 100 numbers
+ * is 25164150
  *
  */
 public class SumSquareDistance {
