@@ -195,13 +195,11 @@ public class LargeSum {
 				int tens = s1/10;
 				int units = s1%10;
 				sumStack.push(units);
-				carryOver=tens;
-				
-			}
-			
-			if(carryOver>0){
-				sumStack.push(carryOver);
-			}
+				carryOver=tens;				
+			}			
+		}
+		if (carryOver > 0) {
+			sumStack.push(carryOver);
 		}
 		
 		while(!sumStack.empty()) {
