@@ -36,6 +36,15 @@ import java.util.List;
  * 
  *  Find the smallest member of the longest amicable chain with no
  *  element exceeding one million.
+ *  
+ *  
+ *  OUTPUT
+ *  --------------------------------------------------------------------------------
+ *  Longest Chain has length --> 27
+ *  14316 → 19116 → 31704 → 47616 → 83328 → 177792 → 295488 → 629072 → 589786 → 294896 → 358336 → 418904 → 366556 → 274924 → 275444 → 243760 → 376736 → 381028 → 285778 → 152990 → 122410 → 97946 → 48976 → 45946 → 22976 → 22744 → 19916
+ *  Smallest Value in the chain is --> 14316
+ *  Total Time: 36738 ms.
+ *  --------------------------------------------------------------------------------
  *
  */
 public class AmicableChains {
@@ -161,6 +170,7 @@ public class AmicableChains {
 	
 	
 	public static void main(String[] args) {
+		long now = System.currentTimeMillis();
 		int longestChainSize = -1;
 		List<Integer> longestAmicableChain = new ArrayList<Integer>();
 		
@@ -180,11 +190,14 @@ public class AmicableChains {
 			aNum++;
 		}
 		
+		long done = System.currentTimeMillis();
+		
 		System.out.println("Longest Chain has length --> "+longestAmicableChain.size());
 		printList(longestAmicableChain);
 		if (longestAmicableChain.size()>0) {
-			System.out.println("Smallest Value is in the chain is --> " + getSmallestValue(longestAmicableChain));
+			System.out.println("Smallest Value in the chain is --> " + getSmallestValue(longestAmicableChain));
 		}
+		System.out.println("Total Time: "+(int)(done-now)+" ms.");
 
 	}
 
