@@ -31,21 +31,25 @@ package org.bawaweb.euler;
  */
 public class ReversibleOddNumbers {
 
-	final static int target =	1000000000;//1000;// 		//	billion
+	final static int target =	1000000000; 		//	billion
 
 	private static long reverseAndAdd(final long num) {
-		String numStr = String.valueOf(num);
-		String revNumStr = new StringBuffer(numStr).reverse().toString();
+		String numStr 		= String.valueOf(num);
+		String revNumStr 	= new StringBuffer(numStr).reverse().toString();
 		return num + (Long.parseLong(revNumStr));
 	}
 	
+	
 	private static boolean allOddDigits(long num) {
-		String numStr = String.valueOf(num);
-		int length = numStr.length();
+		String numStr 	= String.valueOf(num);
+		int length 		= numStr.length();
+		
 		for( int i = 0; i < length; i++) {
 			int digit = Character.getNumericValue( numStr.charAt(i) );
-			if(0==i&&digit==0){return false;}
-				if( digit%2 == 0) {	//	even digit
+			
+			if (0==i && digit==0 )	{	return false;	}
+			
+				if( digit%2 == 0 ) {	//	even digit
 					return false;
 				}
 		}
@@ -55,9 +59,9 @@ public class ReversibleOddNumbers {
 	public static void main(String[] args) {
 		int count = 0;
 		for(int i = 10; i < target; i++) {
-			if ( i % 10 != 0) {
+			if ( i % 10 != 0) {			//	omit - since reversing this would cause a leading zero
 				long proc = reverseAndAdd(i);
-				if (allOddDigits(proc)) {
+				if ( allOddDigits(proc) ) {
 					count += 1;
 				} 
 			}
