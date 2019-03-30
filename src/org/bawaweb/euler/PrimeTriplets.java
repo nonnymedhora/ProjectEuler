@@ -16,6 +16,7 @@ import java.util.Map;
  * -------------------------------------
 	Problem 196
 	Ans. 322303240771079935
+	Diff. 65%
 	
 	Build a triangle from all positive integers in the following way:
 													row		startVal				formula					#digits
@@ -459,15 +460,6 @@ public class PrimeTriplets {
 
 		if (number == 1 || number == 2 || number == 3)
 			return true;
-		/*
-		 * if (number % 2 == 0) { return false; } if (number % 3 == 0) { return
-		 * false; } if (number % 5 == 0) { return false; } if (number % 7 == 0)
-		 * { return false; } if (number % 11 == 0) { return false; } if (number
-		 * % 13 == 0) { return false; } if (number % 17 == 0) { return false; }
-		 * if (number % 19 == 0) { return false; } if (number % 23 == 0) {
-		 * return false; } if (number % 29 == 0) { return false; } if (number %
-		 * 31 == 0) { return false; }
-		 */
 
 		for (long i = 2; i < ((long) Math.sqrt(number) + 1); i++) {
 			if (number % i == 0l)
