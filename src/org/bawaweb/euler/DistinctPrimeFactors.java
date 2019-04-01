@@ -24,10 +24,20 @@ import java.util.List;
 	
 	644 = 2² × 7 × 23
 	645 = 3 × 5 × 43
-	646 = 2 × 17 × 19.
+	646 = 2 × 17 × 19.		
+			[Q?n	how is it distinct -- 2 is prime factor for both 646 and 644]
+			[appears to seek distinct primes only for the number ---
+			not as a distinct prime factor for the three consecutive numbers]
 	
 	Find the first four consecutive integers to have four distinct prime factors each. 
 	What is the first of these numbers?
+	
+	Output
+	---------------------------------------------------------------
+	Smallest consecutive numbers with 4 distinct prime factors
+	134043, 134044, 134045, 134046
+	---------------------------------------------------------------
+	Time ~= 1hour	(starting from 644)
 
  *
  */
@@ -36,64 +46,71 @@ public class DistinctPrimeFactors {
 	
 	public static void main(String[] args) {
 		DistinctPrimeFactors dpf = new DistinctPrimeFactors();
-//		List<Long> distinctPrimeFactorList = new ArrayList<Long>();
 		
 		boolean found = false;
 		
 		
-		long i = 644l;//(134043-4);//1;//
-		long j = 645l;//(134043-3);//2;//
-		long k = 646l;//(134043-2);//3;//
-		long l = 647l;//(134043-1);//4;//
+		long i = 644l;
+		long j = 645l;
+		long k = 646l;
+		long l = 647l;
 		
 		final int size = 4;
 		
-		while( !found ) {			
+		while( !found ) {	
 			i++;
 			j++;
 			k++;
-			l++;
+			l++;													
 			
-			List<Long> iList = dpf.getPrimeFactors(i);
+			List<Long> iList = dpf.getPrimeFactors(i);				
 			if( iList.size() == size ) {
-				List<Long> jList = dpf.getPrimeFactors(j);
+				List<Long> jList = dpf.getPrimeFactors(j);			
 				if( jList.size() == size ) {
-					List<Long> kList = dpf.getPrimeFactors(k);
+					List<Long> kList = dpf.getPrimeFactors(k);		
 					if( kList.size() == size ) {
-						List<Long> lList = dpf.getPrimeFactors(l);
+						List<Long> lList = dpf.getPrimeFactors(l);	
 						if( lList.size() == size ) {
-							boolean check = dpf.checkUniqueness( iList,jList );				//i-j
-							if(!check) {
-								continue;
-							} else {
-								check = dpf.checkUniqueness( iList,kList );					//i-k
-								if(!check) {
-									continue;									
-								} else {
-									check = dpf.checkUniqueness( iList,lList );				//i-l
-									if(!check) {
-										continue;
-									} else {
-										check = dpf.checkUniqueness(jList,kList);			//j-k
-										if(!check) {
-											continue;
-										} else {
-											check = dpf.checkUniqueness(jList,lList);		//j-l
-											if(!check) {
-												continue;
-											} else {
-												check = dpf.checkUniqueness(kList,lList);	//k-l
-												if(!check) {
-													continue;
-												} else {
-													found = true;
-													break;
-												}
-											}
-										}
-									}
-								}
-							}
+							found = true;
+							break;
+							
+//							REMOVING Uniqueness Constraint Checks below
+//							============================================
+//							boolean check = dpf.checkUniqueness( iList,jList );				//i-j
+//							if(!check) {
+//								continue;
+//							} else {
+//								check = dpf.checkUniqueness( iList,kList );					//i-k
+//								if(!check) {
+//									continue;									
+//								} else {
+//									check = dpf.checkUniqueness( iList,lList );				//i-l
+//									if(!check) {
+//										continue;
+//									} else {
+//										check = dpf.checkUniqueness(jList,kList);			//j-k
+//										if(!check) {
+//											continue;
+//										} else {
+//											check = dpf.checkUniqueness(jList,lList);		//j-l
+//											if(!check) {
+//												continue;
+//											} else {
+//												check = dpf.checkUniqueness(kList,lList);	//k-l
+//												if(!check) {
+//													continue;
+//												} else {
+//													System.out.println("FOUND i is "+i);
+//													found = true;
+//													break;
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//							ENDS	REMOVING U
+							
 						}
 					}
 				}
@@ -105,24 +122,36 @@ public class DistinctPrimeFactors {
 		
 	}
 	
+	//from problem statement  doesn't appear that uniqueness/distinctness occurs
+	//644 = 2² × 7 × 23			&&
+	//646 = 2 × 17 × 19.			
+	//2 appears for both 644 and 646 as a prime factor
+	//so not calling this method
+	//	Note---	Having ALL distinct prime factors for consecutive numbers
+	//		is IMPOSSIBLE
+	//		2,3,5	??
 	private boolean checkUniqueness(List<Long> aList, List<Long> bList) {
+		//amending-for-2
 		final int aSize = aList.size();
 		for(int i = 0; i < aSize; i++){
-			if( bList.contains(aList.get(i)) ) {
-				return false;
+			if( aList.get(i) != 2 ) {
+				if( bList.contains( aList.get(i) ) )  {
+					return false;
+				}
 			}
 		}
 		return true;
 	}
 
+	//TODO	rename method - getDistinctPrimeFactors
 	private List<Long> getPrimeFactors(final long num) {
 		List<Long> list = new ArrayList<Long>();
 		
-		List<Long> pList = getPrimesTill(num);
+		List<Long> pList = getPrimesTill(num/2);			//	factor(n) !> n/2,
 		Iterator<Long> iter = pList.iterator();
 		while( iter.hasNext() ){
 			final Long next = iter.next();
-			if( (next!=1) && (num % next == 0) ){
+			if( ( next != 1 ) && ( num % next == 0 ) ){
 				list.add(next);
 			}
 		}
@@ -152,6 +181,16 @@ public class DistinctPrimeFactors {
 				return false;
 		}
 		return isPrime;
+	}
+	
+	private void printList(List<Long> list) {
+		String listStr = "";
+		Iterator<Long> it = list.iterator();
+		while(it.hasNext()) {
+			listStr += it.next() + " ";
+		}
+		System.out.println(listStr);
+		System.out.println("===============================");
 	}
 
 }
