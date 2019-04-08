@@ -35,7 +35,7 @@ import java.util.List;
 public class ZeckendorfRepresentation {
 	
 //	static int n1 = 0, n2 = 1, n3 = 0;
-	static final double target = Math.pow(10,6);//106;
+	static final double target = 100;//Math.pow(10,6);//106;
 
 	int n1 = 0, n2 = 1, n3 = 0;
  	private void printFibonacci(int count) {
@@ -49,6 +49,11 @@ public class ZeckendorfRepresentation {
 		//System.out.println("-----------------------");
 	}
 	
+ 	/**
+ 	 * Retrieves a list of Fibonacci numbers less than or equal to count
+ 	 * @param count		--	maximum possible value of the Fibonacci number
+ 	 * @return			--	list of Fibonacci numbers
+ 	 */
 	private List<Integer> getFibonacciList(int count) {
 		int n1 = 0, n2 = 1, n3 = 0;
 		List<Integer> list = new ArrayList<Integer>();
@@ -69,12 +74,12 @@ public class ZeckendorfRepresentation {
 		ZeckendorfRepresentation zf = new ZeckendorfRepresentation();
 		/*zf.printList(zf.getFibonacciList(88));
 		System.out.println("\n--------------");*/
-		List<Integer> hList = zf.getFibonacciList(100);
-		System.out.println("For100");
+		List<Integer> hList = zf.getFibonacciList((int) target);
+		System.out.println("For number "+target);
 		zf.printList(hList);
 		System.out.println("\n--------------");
-		int minZfH = zf.getMinZfTerms(100,hList);
-		System.out.println("Z(100) == "+minZfH);
+		int minZfH = zf.getMinZfTerms((int)target,hList);
+		System.out.println("Z("+target+") == "+minZfH);
 		
 		
 		/*
@@ -88,10 +93,10 @@ public class ZeckendorfRepresentation {
 			/*if(i==5){
 				zf.printList(fibList);
 			}*/
-			if(i==fibList.get(fibList.size()-1)) {
+			if(i==fibList.get(fibList.size()-1)) {System.out.println("Z("+i+") --> "+1);
 				sumZfTerms += 1;
-			} else {			
-				sumZfTerms += zf.getMinZfTerms(i,fibList);
+			} else {	int z=zf.getMinZfTerms(i,fibList);	System.out.println("Z("+i+") -->  "+z);	
+				sumZfTerms += z;
 			}
 		}
 		System.out.println("SumOfZfTerms till "+target+" is -- "+sumZfTerms);
@@ -102,6 +107,14 @@ public class ZeckendorfRepresentation {
 	//TODO BruteForceAttack----refactor-l8r (^o^)
 	//logic-wise---Fine!-----but!!!
 	//ok-read-it-yourself ^__^
+	/**
+	 * Retrieves the Zeckendorf Representation for a number
+	 * from the list of Fibonacci numbers that are less than
+	 * the number
+	 * @param num		--	the number whose Zeckendorf Represenation we seek
+	 * @param fibList	--	list of Fibonacci values less than the number
+	 * @return the Zeckendorf Representation of the number Z(n)
+	 */
 	private int getMinZfTerms(int num, List<Integer> fibList) {
 		final int size = fibList.size();
 		if (size >= 2) {

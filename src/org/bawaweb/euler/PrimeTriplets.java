@@ -407,30 +407,54 @@ public class PrimeTriplets {
 	}
 
 	public static void main(String[] args) {
-		int sampleRow = 8;
+//		int sampleRow = 8;
+//
+//		System.out.println("start of row " + sampleRow + " -- " + getStart(sampleRow));
+//		System.out.println("Row " + sampleRow + " is " + printRow(getRow(getStart(sampleRow), sampleRow)));
+//		System.out.println("PrimeTripletIndices (row " + sampleRow + ")are: " + printList(getPrimeTripletIndices(sampleRow)));
+//		System.out.println("Sum from map is " + rowSumPrimeTripletsMap.get(sampleRow));
+//		System.out.println("_________________________________________________");
+		
+		/*List<Integer> primeTripletIndices4Row = getPrimeTripletIndices(sampleRow);
+		long start = getStart(sampleRow);
+		long sum = 0l;
+		Iterator<Integer> iter = primeTripletIndices4Row.iterator();
+		while(iter.hasNext()){
+			int index = iter.next();			
+			sum += start+index;
+		}
+		System.out.println("Sum for row "+sampleRow+" is == "+sum);*/
+		
+		
+		
+//		sampleRow = 9;
+//
+//		System.out.println("start of row " + sampleRow + " -- " + getStart(sampleRow));
+//		System.out.println("Row " + sampleRow + " is " + printRow(getRow(getStart(sampleRow), sampleRow)));
+//		System.out.println("PrimeTripletIndices (row " + sampleRow + ")are: " + printList(getPrimeTripletIndices(sampleRow)));
+//		System.out.println("Sum from map is " + rowSumPrimeTripletsMap.get(sampleRow));
+//		System.out.println("_________________________________________________");
 
-		System.out.println("start of row " + sampleRow + " -- " + getStart(sampleRow));
-		System.out.println("Row " + sampleRow + " is " + printRow(getRow(getStart(sampleRow), sampleRow)));
-		System.out.println("PrimeTripletIndices (row " + sampleRow + ")are: " + printList(getPrimeTripletIndices(sampleRow)));
-		System.out.println("Sum is " + rowSumPrimeTripletsMap.get(sampleRow));
-		System.out.println("_________________________________________________");
-		sampleRow = 9;
-
-		System.out.println("start of row " + sampleRow + " -- " + getStart(sampleRow));
-		System.out.println("Row " + sampleRow + " is " + printRow(getRow(getStart(sampleRow), sampleRow)));
-		System.out.println("PrimeTripletIndices (row " + sampleRow + ")are: " + printList(getPrimeTripletIndices(sampleRow)));
-		System.out.println("Sum is " + rowSumPrimeTripletsMap.get(sampleRow));
-		System.out.println("_________________________________________________");
-
-		sampleRow = 10000;
-
+		int sampleRow = 10000;
+		/*
 		System.out.println("start of row " + sampleRow + " -- " + getStart(sampleRow));
 		System.out.println("Row " + sampleRow + " is " + printRow(getRow(getStart(sampleRow), sampleRow)));
 		getPrimeTripletIndices(sampleRow);
 		//System.out.println( "PrimeTripletIndices (row " + sampleRow + ")are:" + printList(getPrimeTripletIndices(sampleRow)));
 		long summmm = rowSumPrimeTripletsMap.get(sampleRow);
 		System.out.println("Sum is " + summmm);
-		System.out.println(" Equal to 950007619 " + (summmm == 950007619));
+		System.out.println(" Equal to 950007619 " + (summmm == 950007619));*/
+		
+		List<Integer> primeTripletIndices4Row = getPrimeTripletIndices(sampleRow);
+		long start = getStart(sampleRow);System.out.println("Start for row "+sampleRow+" is "+start);
+		long sum = 0l;
+		Iterator<Integer> iter = primeTripletIndices4Row.iterator();
+		while(iter.hasNext()){
+			int index = iter.next();			
+			sum += start+index;
+		}
+		System.out.println("Sum for row "+sampleRow+" (using-primeTripletIndices4Row-list) is == "+sum);
+		System.out.println("Sum from map is " + rowSumPrimeTripletsMap.get(sampleRow));
 
 	}
 
