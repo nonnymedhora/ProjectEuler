@@ -43,10 +43,10 @@ public class CodedTriangleNumbers {
 			}
 		}
 		
-		System.out.println("Total number of Triangular Words is: "+numTriangleWords);
+		System.out.println("Total number of Triangular Words is: "+ numTriangleWords);
 	}
 
-	private static boolean isTriangularWord(final String word, Map<Character, Integer> map) {
+	private static boolean isTriangularWord(final String word, final Map<Character, Integer> map) {
 		boolean isTriangularWord = false;
 		char[] lttrs = word.toCharArray();
 		int sumLttrs = 0;
