@@ -53,7 +53,7 @@ public class PentagonNumbers {
 			pentaList = getNextPentagonal(pentaList, index);
 			// each array in the list has two elements
 			List<Long[]> pentaDuosList = combine(pentaList, 2);
-			System.out.println("pentaDuosListSize "+pentaDuosList.size()+" abd pentalast is "+pentaList.get(pentaList.size()-1));
+//			System.out.println("index is "+index+" pentaDuosListSize "+pentaDuosList.size()+" and pentalast is "+pentaList.get(pentaList.size()-1));
 			processPentaDuos(pentaDuosList);
 			if (pentaMap.get("Min") != null && pentaMap.get("Max") != null) {
 				found = true;
@@ -66,11 +66,10 @@ public class PentagonNumbers {
 		final long min = getPentagonalNo(pentaMap.get("Min"));
 		final long max = getPentagonalNo(pentaMap.get("Max"));
 		
-		System.out.println("Indexed at T[" + index + "]");
-		System.out.println("P[pentaMap.get(Min)] == " + min);
-		System.out.println("P[pentaMap.get(Max)] == "+max);
-		System.out.println("PSum = "+(min+max)+" is pentagonal "+checkIsPentagonal(min+max));
-		System.out.println("PDiff = "+(max-min)+" is pentagonal "+checkIsPentagonal(max-min));
+		System.out.println("[pentaMap.get(Min)] == " + min);
+		System.out.println("[pentaMap.get(Max)] == "+max);
+		System.out.println("Sum = "+(min+max)+" is pentagonal "+checkIsPentagonal(min+max));
+		System.out.println("Diff = "+(max-min)+" is pentagonal "+checkIsPentagonal(max-min));
 	}
 	
 	private static void processPentaDuos(List<Long[]> pentaDuosList) {
