@@ -40,14 +40,14 @@ public class CircularPrimes {
 		int numCircularPrimes = 0;
 		List<Integer> numCircularPrimesList = new ArrayList<Integer>();
 
-		for (int i = 2; i <= target; i++) {
+		for (int nmbr = 2; nmbr <= target; nmbr++) {
 
-			if (isPrime(i)) {
+			if ( isPrime(nmbr) ) {
 
-				if (allPermsArePrime(i)) {
+				if ( allCircularPermsArePrime(nmbr)) {
 
 					numCircularPrimes += 1;
-					numCircularPrimesList.add(i);
+					numCircularPrimesList.add(nmbr);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ public class CircularPrimes {
 		return circularList;
 	}
 
-	private static boolean allPermsArePrime(final int num) {
+	private static boolean allCircularPermsArePrime(final int num) {
 		boolean allPermsArePrime = true;
 		String numStr = String.valueOf(num);
 		List<String> numPermsList = circularPermute(numStr);
