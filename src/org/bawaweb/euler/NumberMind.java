@@ -63,7 +63,7 @@ import java.util.Map;
 		
 		Find the unique 16-digit secret sequence.
 =======================================================================		
-STILL WIP.............current best for example (whose ans is 39542)
+STILL WIP.............current best for example (whose correct sequence is is 39542)
 AnswerString is 3X54X
 ====================================================================
  *
