@@ -94,118 +94,104 @@ Answer is 39542
 public class NumberMind {
 	
 	private static final Map<String, Integer> guessMap = new HashMap<String, Integer>();
-	static { 			// number 39542
+	/*static { 			// from example number 39542
 		guessMap.put("90342", 2);
 		guessMap.put("70794", 0);
 		guessMap.put("39458", 2);
 		guessMap.put("34109", 1);
 		guessMap.put("51545", 2);
 		guessMap.put("12531", 1);
+	}*/
+	
+	static {
+		guessMap.put("5616185650518293", 2 );
+		guessMap.put("3847439647293047", 1 );
+		guessMap.put("5855462940810587", 3 );
+		guessMap.put("9742855507068353", 3 );
+		guessMap.put("4296849643607543", 3 );
+		guessMap.put("3174248439465858", 1 );
+		guessMap.put("4513559094146117", 2 );
+		guessMap.put("7890971548908067", 3 );
+		guessMap.put("8157356344118483", 1 );
+		guessMap.put("2615250744386899", 2 );
+		guessMap.put("8690095851526254", 3 );
+		guessMap.put("6375711915077050", 1 );
+		guessMap.put("6913859173121360", 1 );
+		guessMap.put("6442889055042768", 2 );
+		guessMap.put("2321386104303845", 0 );
+		guessMap.put("2326509471271448", 2 );
+		guessMap.put("5251583379644322", 2 );
+		guessMap.put("1748270476758276", 3 );
+		guessMap.put("4895722652190306", 1 );
+		guessMap.put("3041631117224635", 3 );
+		guessMap.put("1841236454324589", 3 );
+		guessMap.put("2659862637316867", 2 );
+
 	}
 	
 	private static String answerString = "";
 	
-	private static Map<Integer,/*char[]*/List<Character>> positionPossValsMap = new HashMap<Integer,List<Character>>();
-	private static Map<Integer,List<String>> numGuessMap = new HashMap<Integer,List<String>>();
+	private static Map<Integer,List<Character>> positionPossValsMap = new HashMap<Integer,List<Character>>();
+	private static Map<Integer,List<String>> 	numGuessMap = new HashMap<Integer,List<String>>();
 	
 	private static Map<Integer,List<Character>> disallowedPossValsMap = new HashMap<Integer,List<Character>>();
 	
+	
 	public static void main(String[] args) {
-		/*String texst = "XXXXXXXX";
-		int i = 4;
-		String p1 = texst.substring(0,i);
-		String p2 = texst.substring(i+1);
-		texst=p1+'5'+p2;
-		System.out.println(texst);*/
-		
-		
+
 		generateBlankAnswerString();
-		
-		/*generatePositionPossibleValsMap();
-		printPossMap(positionPossValsMap);
-		
-		List<char[]> allPossList = generateAllPossibleOptions();		
-		System.out.println("B4 allPossList size is "+allPossList.size());
-//		printListCharArr(allPossList);
-		1*/
+
 		generateNumGuessMap();
-		System.out.println("numGuessMap");
-		printNumGuessMap(numGuessMap);
-		
+
 		identifyOverlaps();
-		System.out.println("AnswerString is "+answerString);
-		
+
 		List<String> possAnsList = doMatchElimination();
-		System.out.println("AFTER___ matchElimination----sizeOfList<string> is "+possAnsList.size());
-		printListString(possAnsList);
-		
+
 		possAnsList = removeDisallowedVals(possAnsList);
-		System.out.println("\nAFTER removeDisALLOWED----sizeOfList<string> is "+possAnsList.size());
-		printListString(possAnsList);
-		
-		
+
 		possAnsList = doXCrossElimination(possAnsList);
-		System.out.println("\nAFTER doXCross----sizeOfList<string> is "+possAnsList.size());
-		printListString(possAnsList);
-		
+
 		possAnsList = removeXvalsFromList(possAnsList);
-		System.out.println("\nAFTER removingXs----sizeOfList<string> is "+possAnsList.size());
-		printListString(possAnsList);
-		
+
 		possAnsList = removeGuessVals(possAnsList);
-		
-		if(possAnsList.size()==1){
-			System.out.println("\nAnswer is "+possAnsList.get(0));
-		}else{
-			System.out.println("\nAfter removing Guesses - remaining size now "+possAnsList.size());
-			printListString(possAnsList);
-			
+
+		if (possAnsList.size() == 1) {
+			System.out.println("\nAnswer is " + possAnsList.get(0));
+		} else {
+
 			possAnsList = doCrossGuessElimination(possAnsList);
-			if(possAnsList.size()==1){
-				System.out.println("\nAnswer is "+possAnsList.get(0));
-			}else{
-				System.out.println("\nAfter doCross Guesses - remaining size now "+possAnsList.size());
+			if (possAnsList.size() == 1) {
+				System.out.println("\nAnswer is " + possAnsList.get(0));
+			} else {
+				System.out.println("\nAfter doCross Guesses - remaining size now " + possAnsList.size());
 				printListString(possAnsList);
 			}
 		}
-		
-		
-		
-		
-		/*allPossList = prunePossList(allPossList);
-		System.out.println("After PRUNING, allPossList size is "+allPossList.size());
-		printListCharArr(allPossList);
-		1*/
-		/*
-		allPossList = doCrossPrunePossList(allPossList,possAnsList);*/
-		
-//		allPossList = pruneSingularites(allPossList);
-//		System.out.println("\n\nAfter SINGLEPRUNING, allPossList size is "+allPossList.size());
-		
+
 	}
 
 
 	private static List<String> doCrossGuessElimination(List<String> pList) {
 		List<String> vals2Remove = new ArrayList<String>();
-		List<String> guessList = getGuessList();
-		for(String aVal : pList){
-			
-			for(int numGuess : numGuessMap.keySet()){
-				for(String aGuess : numGuessMap.get(numGuess)){
+
+		for (String aVal : pList) {
+
+			for (int numGuess : numGuessMap.keySet()) {
+				for (String aGuess : numGuessMap.get(numGuess)) {
 					int matchCount = 0;
-					for(int i = 0; i < aVal.length(); i++){
-						if(aVal.charAt(i)==aGuess.charAt(i)){
-							matchCount+=1;
+					for (int i = 0; i < aVal.length(); i++) {
+						if (aVal.charAt(i) == aGuess.charAt(i)) {
+							matchCount += 1;
 						}
 					}
-					if(numGuess!=matchCount){
+					if (numGuess != matchCount) {
 						vals2Remove.add(aVal);
 					}
-					
+
 				}
 			}
 		}
-		
+
 		pList.removeAll(vals2Remove);
 		return pList;
 	}
@@ -214,8 +200,8 @@ public class NumberMind {
 	private static List<String> removeGuessVals(List<String> possList) {
 		List<String> vals2Remove = new ArrayList<String>();
 		List<String> guessList = getGuessList();
-		for(String aVal : possList){
-			if(guessList.contains(aVal)){
+		for (String aVal : possList) {
+			if (guessList.contains(aVal)) {
 				vals2Remove.add(aVal);
 			}
 		}
@@ -225,10 +211,10 @@ public class NumberMind {
 
 
 	private static List<String> removeXvalsFromList(List<String> possAnsList) {
-		List<String> vals2Remove=new ArrayList<String>();
-		for(String aVal:possAnsList){
-			for(int i = 0; i < aVal.length(); i++){
-				if(aVal.charAt(i)=='X'){
+		List<String> vals2Remove = new ArrayList<String>();
+		for (String aVal : possAnsList) {
+			for (int i = 0; i < aVal.length(); i++) {
+				if (aVal.charAt(i) == 'X') {
 					vals2Remove.add(aVal);
 				}
 			}
@@ -240,75 +226,68 @@ public class NumberMind {
 
 	private static List<String> doXCrossElimination(List<String> aList) {
 		List<Integer> xPosList = getXPosList();
-		Map<Integer,Integer> xPosNumMap = new HashMap<Integer,Integer>();
+		Map<Integer, Integer> xPosNumMap = new HashMap<Integer, Integer>();
 		for (int xPos : xPosList) {
 			for (String aPoss : aList) {
-				if(aPoss.charAt(xPos)=='X'){
-					if(xPosNumMap.get(xPos)==null){
-						xPosNumMap.put(xPos,1);
-					}else{
+				if (aPoss.charAt(xPos) == 'X') {
+					if (xPosNumMap.get(xPos) == null) {
+						xPosNumMap.put(xPos, 1);
+					} else {
 						int exVal = xPosNumMap.get(xPos);
-						exVal+=1;
-						xPosNumMap.put(xPos,exVal);
-					}
-				}
-			} 
-		}
-		List<String> items2Remove = new ArrayList<String>();
-		Map<Integer,Character> posCharsFoundMap = new HashMap<Integer,Character>();
-		int comp = aList.size()-1;
-		for(int xnum : xPosNumMap.keySet()){
-			if(xPosNumMap.get(xnum)==comp){
-				for(String aPoss : aList){
-					if(aPoss.charAt(xnum)!='X'){
-						char theChar2Replace = aPoss.charAt(xnum);
-						String p1 = answerString.substring(0,xnum);
-						String p2 = answerString.substring(xnum+1);
-						answerString = p1+theChar2Replace+p2;
-						
-						posCharsFoundMap.put(xnum,theChar2Replace);
+						exVal += 1;
+						xPosNumMap.put(xPos, exVal);
 					}
 				}
 			}
 		}
-		System.out.println("\nANSWERTstring now "+answerString);
-		
-		for(int pos : posCharsFoundMap.keySet()){
-			for(int i = 0; i < aList.size(); i++){
+
+		Map<Integer, Character> posCharsFoundMap = new HashMap<Integer, Character>();
+		int comp = aList.size() - 1;
+		for (int xnum : xPosNumMap.keySet()) {
+			if (xPosNumMap.get(xnum) == comp) {
+				for (String aPoss : aList) {
+					if (aPoss.charAt(xnum) != 'X') {
+						char theChar2Replace = aPoss.charAt(xnum);
+						String p1 = answerString.substring(0, xnum);
+						String p2 = answerString.substring(xnum + 1);
+						answerString = p1 + theChar2Replace + p2;
+
+						posCharsFoundMap.put(xnum, theChar2Replace);
+					}
+				}
+			}
+		}
+
+		for (int pos : posCharsFoundMap.keySet()) {
+			for (int i = 0; i < aList.size(); i++) {
 				String possValStr = aList.get(i);
 				char theChar2Replace = posCharsFoundMap.get(pos);
-				String p1 = possValStr.substring(0,pos);
-				String p2 = possValStr.substring(pos+1);
-				possValStr = p1+theChar2Replace+p2;
-				aList.set(i,possValStr);
+				String p1 = possValStr.substring(0, pos);
+				String p2 = possValStr.substring(pos + 1);
+				possValStr = p1 + theChar2Replace + p2;
+				aList.set(i, possValStr);
 			}
 		}
-		
+
 		return aList;
 	}
 
 
 	private static List<String> removeDisallowedVals(List<String> aList) {
 		List<String> items2Remove = new ArrayList<String>();
-		for(String aVal : aList){
-			for(int i = 0; i < aVal.length(); i++){
-				if(disallowedPossValsMap.get(i).contains(aVal.charAt(i))){
+		for (String aVal : aList) {
+			for (int i = 0; i < aVal.length(); i++) {
+				if (disallowedPossValsMap.get(i).contains(aVal.charAt(i))) {
 					items2Remove.add(aVal);
 				}
 			}
 		}
-		
-		for(String rem : items2Remove){
+
+		for (String rem : items2Remove) {
 			aList.remove(rem);
 		}
-		
+
 		return aList;
-	}
-
-
-	private static List<char[]> doCrossPrunePossList(List<char[]> allPossList, List<String> possAnsList) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 
@@ -316,51 +295,36 @@ public class NumberMind {
 		List<Integer> xPosList = getXPosList();
 
 		List<String> possibleAnswers = new ArrayList<String>();
-		
-		for(int key : numGuessMap.keySet()){
-			if(key!=1){
+
+		for (int key : numGuessMap.keySet()) {
+			if (key != 1) {
 				for (String aVal : numGuessMap.get(key)) {
 
 					String[] tempS = createXTemps(xPosList);
-					
+
 					int matchCount = 0;
-					for(int i = 0; i <answerString.length(); i++){
-						if(aVal.charAt(i)==answerString.charAt(i)){
-							matchCount+=1;
+					for (int i = 0; i < answerString.length(); i++) {
+						if (aVal.charAt(i) == answerString.charAt(i)) {
+							matchCount += 1;
 						}
 					}
-					if(matchCount!=key){	//||matchCount<key
-						for(int i = 0; i < xPosList.size();i++){
-							int char2ReplaceIndex = xPosList.get(i);//aVal.indexOf(xPosList.get(i));
-//System.out.println("For val "+aVal+ " char2ReplaceIndex is "+char2ReplaceIndex+ " whicb is "+aVal.charAt(char2ReplaceIndex));							
-							String p1 = tempS[i].substring(0,xPosList.get(i));
-							String p2 = tempS[i].substring(xPosList.get(i)+1);
-							
-							tempS[i]= p1+aVal.charAt(char2ReplaceIndex)+p2;
-//System.out.println("For val "+aVal+" i s "+i+" and tempS[i] is "+tempS[i]);							
+					if (matchCount != key) { // ||matchCount<key
+						for (int i = 0; i < xPosList.size(); i++) {
+							int char2ReplaceIndex = xPosList.get(i);
+
+							String p1 = tempS[i].substring(0, xPosList.get(i));
+							String p2 = tempS[i].substring(xPosList.get(i) + 1);
+
+							tempS[i] = p1 + aVal.charAt(char2ReplaceIndex) + p2;
+
 							possibleAnswers.add(tempS[i]);
-							
+
 						}
 					}
 				}
-			}/*else{
-				//key==1;
-				for (String aVal : numGuessMap.get(key)) {
-					String[] tempS = createXTemps(xPosList);
-					for(int i = 0; i < xPosList.size();i++){
-						int char2ReplaceIndex = xPosList.get(i);//aVal.indexOf(xPosList.get(i));
-						
-						String p1 = tempS[i].substring(0,xPosList.get(i));
-						String p2 = tempS[i].substring(xPosList.get(i)+1);
-						
-						tempS[i]= p1+char2ReplaceIndex+p2;
-						possibleAnswers.add(tempS[i]);
-						
-					}
-				}
-			}*/
+			}
 		}
-		
+
 		return possibleAnswers;
 	}
 
@@ -392,7 +356,7 @@ public class NumberMind {
 	private static String[] createXTemps(List<Integer> xPosList) {
 		String tempString = new String(answerString.toCharArray());
 		String[] tempS = new String[xPosList.size()];
-		
+
 		for (int i = 0; i < tempS.length; i++) {
 			tempS[i] = tempString;
 		}
@@ -505,53 +469,52 @@ public class NumberMind {
 
 
 	private static void identifyOverlaps() {
-		for(int key : numGuessMap.keySet()){
+		for (int key : numGuessMap.keySet()) {
 			List<String> vals = numGuessMap.get(key);
-			
-			if(vals.size()>1){
+
+			if (vals.size() > 1) {
 				String test = vals.get(0);
-				
-				for(int i = 0; i < test.length(); i++){
-					for(int v = 1; v < vals.size(); v++){
+
+				for (int i = 0; i < test.length(); i++) {
+					for (int v = 1; v < vals.size(); v++) {
 						String val = vals.get(v);
-						if(test.charAt(i)==val.charAt(i)){
-							String p1 = answerString.substring(0,i);
-							String p2 = answerString.substring(i+1);
-							answerString = p1+test.charAt(i)+p2;
+						if (test.charAt(i) == val.charAt(i)) {
+							String p1 = answerString.substring(0, i);
+							String p2 = answerString.substring(i + 1);
+							answerString = p1 + test.charAt(i) + p2;
 						}
 					}
 				}
 			}
 		}
-		
+
 		List<String> singVals = numGuessMap.get(1);
 		List<String> compareList = new ArrayList<String>();
-		for(int key : numGuessMap.keySet()){
-			if(key!=1){
+		for (int key : numGuessMap.keySet()) {
+			if (key != 1) {
 				compareList.addAll(numGuessMap.get(key));
 			}
 		}
-		for(String comp : compareList){
-			for(String sing : singVals){
-				for(int i = 0; i <sing.length(); i++){
-					if(sing.charAt(i)==comp.charAt(i)){
-						String p1 = answerString.substring(0,i);
-						String p2 = answerString.substring(i+1);
-						answerString = p1+sing.charAt(i)+p2;
+		for (String comp : compareList) {
+			for (String sing : singVals) {
+				for (int i = 0; i < sing.length(); i++) {
+					if (sing.charAt(i) == comp.charAt(i)) {
+						String p1 = answerString.substring(0, i);
+						String p2 = answerString.substring(i + 1);
+						answerString = p1 + sing.charAt(i) + p2;
 					}
 				}
 			}
 		}
-		
+
 	}
 
 
 	private static void generateBlankAnswerString() {
 		String sample = getGuessList().get(0);
-		for(int i = 0; i < sample.length(); i++){
-			answerString+="X";
+		for (int i = 0; i < sample.length(); i++) {
+			answerString += "X";
 		}
-		System.out.println("BlankAnswerString is "+answerString);
 	}
 
 
@@ -559,31 +522,29 @@ public class NumberMind {
 		for (String gKey : guessMap.keySet()) {
 			if (guessMap.get(gKey) != 0) {
 				add2NumGuessMap(guessMap.get(gKey), gKey);
-			}else{
+			} else {
 				add2DisallowedPossMap(gKey);
 			}
 		}
 	}
 
 	private static void add2DisallowedPossMap(String aString) {
-		for(int i = 0; i < aString.length(); i++){
-			add2DisallowedPossValsMap(i,aString.charAt(i));
+		for (int i = 0; i < aString.length(); i++) {
+			add2DisallowedPossValsMap(i, aString.charAt(i));
 		}
-		
 	}
 
 
 	private static void add2DisallowedPossValsMap(int key, char aChar) {
-		if(disallowedPossValsMap.get(key)==null){
+		if (disallowedPossValsMap.get(key) == null) {
 			List<Character> aList = new ArrayList<Character>();
 			aList.add(aChar);
-			disallowedPossValsMap.put(key,aList);
-		}else{
+			disallowedPossValsMap.put(key, aList);
+		} else {
 			List<Character> exValList = disallowedPossValsMap.get(key);
 			exValList.add(aChar);
-			disallowedPossValsMap.put(key,exValList);
+			disallowedPossValsMap.put(key, exValList);
 		}
-		
 	}
 
 
@@ -698,7 +659,7 @@ public class NumberMind {
 
 	private static char[] toArray(List<Character> list) {
 		char[] chars = new char[list.size()];
-		for(int i = 0; i < list.size(); i++){
+		for (int i = 0; i < list.size(); i++) {
 			chars[i] = list.get(i);
 		}
 		return chars;
@@ -748,17 +709,17 @@ public class NumberMind {
 	}
 
 	private static void printPossMap(Map<Integer, List<Character>> possMap) {
-		for(int key : possMap.keySet()){
-			System.out.print(key+" ==> ");
+		for (int key : possMap.keySet()) {
+			System.out.print(key + " ==> ");
 			printListChar(possMap.get(key));
 			System.out.println();
 		}
 		System.out.println("================================");
 	}
 	
-	private static void printNumGuessMap(Map<Integer,List<String>> aMap){
-		for(int key : aMap.keySet()){
-			System.out.print(key+" ==> ");
+	private static void printNumGuessMap(Map<Integer, List<String>> aMap) {
+		for (int key : aMap.keySet()) {
+			System.out.print(key + " ==> ");
 			printListString(aMap.get(key));
 			System.out.println();
 		}
@@ -793,7 +754,7 @@ public class NumberMind {
 	
 	
 	
-	
+	//not-used
 	//https://stackoverflow.com/questions/41453353/return-all-combinations-from-the-matrix-in-java
 	private static List<char[]> combine(char[][] matrix) {
         int sizeArray[] = new int[matrix.length];
@@ -833,19 +794,19 @@ public class NumberMind {
 	System.out.println(i);*/
 	
 	
-	private static void printMatrix(final char[][] matrix){
+	private static void printMatrix(final char[][] matrix) {
 		final int length = matrix.length;
 		System.out.println("=========Matrix is===========:");
-		for(int row = 0; row < length; row++){
+		for (int row = 0; row < length; row++) {
 			System.out.println(Arrays.toString(matrix[row]));
 		}
 		System.out.println("===========================");
 	}
 	
-	private static void printListCharArr(List<char[]> list){
+	private static void printListCharArr(List<char[]> list) {
 		final int size = list.size();
 		System.out.println("=========List<char[]> is===========:");
-		for(int row = 0; row < size; row++){
+		for (int row = 0; row < size; row++) {
 			System.out.println(Arrays.toString(list.get(row)));
 		}
 		System.out.println("===========================");
