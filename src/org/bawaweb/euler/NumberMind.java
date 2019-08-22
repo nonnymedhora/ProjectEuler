@@ -63,33 +63,24 @@ import java.util.Map;
 		
 		Find the unique 16-digit secret sequence.
 =======================================================================		
-STILL WIP.............current best for example (whose correct sequence is is 39542)
+.............current best for example (whose correct sequence is is 39542)
 Output
 =====================================
-BlankAnswerString is XXXXX
-numGuessMap
-1 ==> [12531, 34109]
-2 ==> [90342, 39458, 51545]
-================================
-AnswerString is 3X54X
-AFTER___ matchElimination----sizeOfList<string> is 4
-[3054X, 3X542, 3954X, 3X548]
-AFTER removeDisALLOWED----sizeOfList<string> is 3
-[3X542, 3954X, 3X548]
-ANSWERTstring now 3954X
 
-AFTER doXCross----sizeOfList<string> is 3
-[39542, 3954X, 39548]
-AFTER removingXs----sizeOfList<string> is 2
-[39542, 39548]
-After removing Guesses - remaining size now 2
-[39542, 39548]
 
 
 Answer is 39542
 
 ====================================================================
  *
+ *
+ * A very VERY sneaky problem
+ * When I looked at the answer - 464...9533
+ * 
+ * notice that the 12th digit - 9 - **Does Not** appear in any of the guesses
+ * 
+ * I made an assumption that each position was guessed at least once
+ * Also, an invalid assumption, that overlaps of characters would lead to correct answerString
  */
 public class NumberMind {
 	
@@ -103,7 +94,7 @@ public class NumberMind {
 		guessMap.put("12531", 1);
 	}*/
 	
-	static {
+	static {			// 4640261571849533
 		guessMap.put("5616185650518293", 2 );
 		guessMap.put("3847439647293047", 1 );
 		guessMap.put("5855462940810587", 3 );
@@ -135,15 +126,16 @@ public class NumberMind {
 	private static Map<Integer,List<String>> 	numGuessMap = new HashMap<Integer,List<String>>();
 	
 	private static Map<Integer,List<Character>> disallowedPossValsMap = new HashMap<Integer,List<Character>>();
-	
+	private static Map<Integer, List<Character>> posnUnusedValsMap = new HashMap<Integer, List<Character>>();
 	
 	public static void main(String[] args) {
 
-		generateBlankAnswerString();
-
+		generateXAnswerString();
+System.out.println(answerString);
 		generateNumGuessMap();
-
+printNumGuessMap(numGuessMap);
 		identifyOverlaps();
+System.out.println("\nanswer string (after overlaps) is "+answerString);
 
 		List<String> possAnsList = doMatchElimination();
 
@@ -167,7 +159,86 @@ public class NumberMind {
 				printListString(possAnsList);
 			}
 		}
+		
+		System.out.println("POSSSST");
+		posnUnusedValsMap=generatePosnUnusedValsMap(posnUnusedValsMap);
+		System.out.println();
+		printPossMap(posnUnusedValsMap);
+	}
 
+
+	private static Map<Integer, List<Character>> generatePosnUnusedValsMap(Map<Integer, List<Character>> map) {
+		/*final List<Character> startL = getStartListPossVals();	//cannot contain 0
+		final List<Character> otherL = generateOtherListPossVals();*/
+//		System.out.println("start");
+//		printListChar(startL);
+//		System.out.println("\nother");
+//		printListChar(otherL);
+		
+		int length = getGuessList().get(0).length();
+		
+		for (int index = 0; index < length; index++) {
+			List<Character> gList = new ArrayList<Character>();
+			List<Character> tempL = new ArrayList<Character>();
+			
+			if (index == 0) {
+				tempL = getStartListPossVals();//startL;
+			} else {
+				tempL = generateOtherListPossVals();//otherL;
+			}
+
+			for (String aGuess : getGuessList()) {
+				if (guessMap.get(aGuess) != 0) {
+					char gChar = aGuess.charAt(index);
+					if (!gList.contains(gChar)) {
+						gList.add(gChar);
+					}
+				}
+			}
+			
+			for (String aGuess : getGuessList()) {
+				if (guessMap.get(aGuess) == 0) {
+					char gChar = aGuess.charAt(index);
+					if (gList.contains(gChar)) {
+						gList.remove(gList.indexOf(gChar));//(index);//
+					}
+					
+					if(tempL.contains(gChar)){
+						tempL.remove(tempL.indexOf(gChar));
+					}
+				}
+			}
+			
+			
+			
+//System.out.println("\ngList for "+index);		printListChar(gList);	
+			tempL.removeAll(gList);
+//			System.out.println();
+//System.out.println("tempL For "+index);printListChar(tempL);
+			map.put(index, tempL);
+
+		}
+		
+		
+		return map;
+	}
+
+
+	private static List<Character> generateOtherListPossVals() {
+		List<Character> aList = new ArrayList<Character>();
+		for(int i = 0; i <= 9;i++){
+			aList.add(String.valueOf(i).charAt(0));
+		}
+		return aList;
+	}
+
+
+	private static List<Character> getStartListPossVals() {
+		List<Character> aList = new ArrayList<Character>();
+		for(int i = 1; i <= 9;i++){
+			aList.add(String.valueOf(i).charAt(0));
+		}
+		return aList;
 	}
 
 
@@ -466,13 +537,154 @@ public class NumberMind {
 		}
 		return null;
 	}
+	private static Map<Integer, List<Character>> add2Col0OverLayMap(Map<Integer, List<Character>> ZMap, String aVal) {
+		if(ZMap.size()==0){
+			for(int i = 0; i < aVal.length(); i++){
+				List<Character> chars = new ArrayList<Character>();
+				chars.add(aVal.charAt(i));
+				ZMap.put(i,chars);
+			}
+		}else{
+			for(int i = 0; i < aVal.length(); i++){
+				List<Character> exChars = ZMap.get(i);
+				exChars.add(aVal.charAt(i));
+				ZMap.put(i,exChars);
+			}
+		}
+		return ZMap;
+	}
 
 
+	private static Map<Integer, Map<Character, Integer>> add2ColOverLayMap(Map<Integer, Map<Character, Integer>> map, String aVal) {
+		if (map.size() == 0) {
+			for (int i = 0; i < aVal.length(); i++) {
+				Map<Character, Integer> aMap = new HashMap<Character, Integer>();
+
+				char aChar = aVal.charAt(i);
+
+				aMap.put(aChar, 1);
+
+				map.put(i, aMap);
+
+			}
+		} else {
+			for (int u = 0; u < aVal.length(); u++) {
+				Map<Character, Integer> exMap = map.get(u);
+
+				char aChar = aVal.charAt(u);
+
+				if (exMap.keySet().contains(aChar)) {
+					int exVal = exMap.get(aChar);
+					exVal += 1;
+					exMap.put(aChar, exVal);
+					map.put(u, exMap);
+				} else {
+					exMap.put(aChar, 1);
+					map.put(u, exMap);
+				}
+			}
+		}
+		return map;
+	}
+	
 	private static void identifyOverlaps() {
+		//just-identifies-overlaps-first
+		
+		// stores per column, those values from numGuessMap which are the same across guesses
+		Map<Integer,Map<Character,Integer>> colOverlayMap = new HashMap<Integer,Map<Character,Integer>>();
+		
+		//remove-for-zeroes
+		Map<Integer,List<Character>> col0OverlayMap = new HashMap<Integer,List<Character>>();
+		
+		for (String key : guessMap.keySet()) {
+			int val = guessMap.get(key);
+			if (val != 0) {
+				colOverlayMap = add2ColOverLayMap(colOverlayMap, key);
+			} else {
+				col0OverlayMap = add2Col0OverLayMap(col0OverlayMap, key);
+			}			
+		}
+		
+//		printOverlayMap(colOverlayMap);
+//		printZOverlayMap(col0OverlayMap);
+		
+		colOverlayMap = removeZVals(colOverlayMap,col0OverlayMap);
+		
+//		printOverlayMap(colOverlayMap);
+		
+		int length = getGuessList().get(0).length();
+		for(int i = 0; i < length;i++){
+			Map<Character, Integer> aMap = colOverlayMap.get(i);
+			char tempChar = 'Z';
+			int maxCharCount = -1;
+
+			for (char aChar : aMap.keySet()) {
+				int exVal = aMap.get(aChar);
+				if (exVal > maxCharCount) {
+					maxCharCount = exVal;
+					tempChar = aChar;
+				}
+			}
+			
+			if (maxCharCount >= 2) {
+				String p1 = answerString.substring(0, i);
+				String p2 = answerString.substring(i + 1);
+				answerString = p1 + tempChar + p2;
+			}
+		}
+	}
+
+
+
+
+	private static void printZOverlayMap(Map<Integer, List<Character>> ZMap) {
+		int length = getGuessList().get(0).length();
+		System.out.println("\nZMap");
+		for(int i = 0; i < length; i++){
+			System.out.print(" "+i+"==>");
+			if(ZMap.get(i)!=null){printListChar(ZMap.get(i));}
+			else{System.out.print("null\n");}
+		}System.out.println();
+		
+	}
+
+
+	private static void printOverlayMap(Map<Integer, Map<Character, Integer>> oMap) {
+		int length = getGuessList().get(0).length();
+		StringBuilder s = new StringBuilder("\nOverlay Map\n");
+		for(int i = 0; i < length; i++){
+			s.append("\n"+i+"==> [");
+			Map<Character,Integer> exMap = oMap.get(i);
+			for(char aChar : exMap.keySet()){
+				s.append("("+aChar+","+exMap.get(aChar)+")");
+			}
+			s.append("]");
+		}
+		System.out.println(s.toString());
+	}
+
+
+	private static Map<Integer, Map<Character, Integer>> removeZVals(Map<Integer, Map<Character, Integer>> aMap, Map<Integer, List<Character>> ZMap) {
+		for (int key : aMap.keySet()) {
+			Map<Character, Integer> exMap = aMap.get(key);
+			if (ZMap.get(key) != null) {
+				for (Character zchar : ZMap.get(key)) {
+					exMap.remove(zchar);
+				}
+			}
+			aMap.put(key, exMap);
+		}
+		return aMap;
+	}
+
+
+	private static void identifyOverlaps11() {
+		//assumes-overlaps-are-correct-guesses
+		//iteration-done-per-num-guess-grouping
 		for (int key : numGuessMap.keySet()) {
 			List<String> vals = numGuessMap.get(key);
 
-			if (vals.size() > 1) {
+//			if (vals.size() > 1) {
 				String test = vals.get(0);
 
 				for (int i = 0; i < test.length(); i++) {
@@ -482,9 +694,10 @@ public class NumberMind {
 							String p1 = answerString.substring(0, i);
 							String p2 = answerString.substring(i + 1);
 							answerString = p1 + test.charAt(i) + p2;
+System.out.println("key=="+key+" i == "+i+" v is "+v+" for test "+test+" [answerString] is "+answerString);						
 						}
 					}
-				}
+//				}
 			}
 		}
 
@@ -502,6 +715,7 @@ public class NumberMind {
 						String p1 = answerString.substring(0, i);
 						String p2 = answerString.substring(i + 1);
 						answerString = p1 + sing.charAt(i) + p2;
+						System.out.println(" i == "+i+" [answerString] is "+answerString);						
 					}
 				}
 			}
@@ -510,7 +724,7 @@ public class NumberMind {
 	}
 
 
-	private static void generateBlankAnswerString() {
+	private static void generateXAnswerString() {
 		String sample = getGuessList().get(0);
 		for (int i = 0; i < sample.length(); i++) {
 			answerString += "X";
@@ -728,6 +942,10 @@ public class NumberMind {
 
 
 	private static void printListChar(List<Character> list) {
+		if (list == null || list.size() == 0) {
+			System.out.print("Empty");
+			return;
+		}
 		String s = "[";
 		for (int i = 0; i < list.size(); i++) {
 			if (i != list.size() - 1) {
@@ -740,6 +958,10 @@ public class NumberMind {
 	}
 	
 	private static void printListString(List<String> list) {
+		if (list == null || list.size() == 0) {
+			System.out.print("Empty\n");
+			return;
+		}
 		String s = "[";
 		for (int i = 0; i < list.size(); i++) {
 			if (i != list.size() - 1) {
@@ -748,7 +970,7 @@ public class NumberMind {
 				s += list.get(i) + "]";
 			}
 		}
-		System.out.print(s);
+		System.out.print(s+"\n");
 	}
 	
 	
@@ -814,3 +1036,96 @@ public class NumberMind {
 
 
 }
+
+
+/**
+ * JUNK
+ //TODO
+ 
+ 		v1
+ key==2 i == 3 v is 2 for test 90342 [answerString] is XXX4X
+ i == 0 [answerString] is 3XX4X
+ i == 2 [answerString] is 3X54X
+
+Answer is 39542
+
+		v2
+XXXXX
+1 ==> [12531, 34109]
+2 ==> [90342, 39458, 51545]
+================================
+
+Overlay Map
+
+0==> [(1,1)(3,2)(5,1)(9,1)]
+1==> [(0,1)(1,1)(2,1)(4,1)(9,1)]
+2==> [(1,1)(3,1)(4,1)(5,2)]
+3==> [(0,1)(3,1)(4,2)(5,1)]
+4==> [(1,1)(2,1)(5,1)(8,1)(9,1)]
+
+ZMap
+ 0==>[7] 1==>[0] 2==>[7] 3==>[9] 4==>[4]
+
+Overlay Map
+
+0==> [(1,1)(3,2)(5,1)(9,1)]
+1==> [(1,1)(2,1)(4,1)(9,1)]
+2==> [(1,1)(3,1)(4,1)(5,2)]
+3==> [(0,1)(3,1)(4,2)(5,1)]
+4==> [(1,1)(2,1)(5,1)(8,1)(9,1)]
+
+answer string (after overlaps) is 3X54X
+---	thencontinues -- allOk
+		
+		v3
+XXXXXXXXXXXXXXXX
+1 ==> [4895722652190306, 8157356344118483, 6375711915077050, 3174248439465858, 6913859173121360, 3847439647293047]
+2 ==> [5251583379644322, 2659862637316867, 6442889055042768, 2615250744386899, 2326509471271448, 4513559094146117, 5616185650518293]
+3 ==> [7890971548908067, 3041631117224635, 5855462940810587, 8690095851526254, 4296849643607543, 1841236454324589, 9742855507068353, 1748270476758276]
+================================
+
+Overlay Map
+
+0==> [(1,2)(2,3)(3,3)(4,3)(5,3)(6,3)(7,1)(8,2)(9,1)]
+1==> [(0,1)(1,2)(2,2)(3,2)(4,1)(5,1)(6,4)(7,2)(8,5)(9,1)]
+2==> [(1,4)(2,1)(4,6)(5,4)(7,2)(9,4)]
+3==> [(0,2)(1,3)(2,2)(3,2)(4,1)(5,4)(6,3)(7,2)(8,1)(9,1)]
+4==> [(0,1)(1,1)(2,4)(3,1)(4,2)(5,3)(6,1)(7,2)(8,5)(9,1)]
+5==> [(0,1)(1,1)(2,1)(3,3)(4,2)(5,5)(6,2)(7,2)(8,3)(9,1)]
+6==> [(0,2)(1,3)(2,3)(3,1)(5,3)(6,2)(8,1)(9,6)]
+7==> [(0,2)(1,2)(3,2)(4,4)(5,2)(6,5)(7,1)(8,1)(9,2)]
+8==> [(0,1)(1,2)(3,2)(4,6)(5,5)(7,4)(9,1)]
+9==> [(0,2)(1,2)(2,1)(3,2)(4,4)(5,2)(6,1)(7,4)(8,1)(9,2)]
+10==> [(0,3)(1,4)(2,3)(3,3)(4,1)(5,2)(6,2)(7,1)(8,1)(9,1)]
+11==> [(0,2)(1,4)(2,4)(4,3)(5,1)(6,2)(7,2)(8,1)(9,2)]
+12==> [(0,2)(1,2)(2,1)(3,1)(4,3)(5,1)(6,4)(7,2)(8,5)]
+13==> [(0,3)(1,1)(2,3)(3,4)(4,2)(5,3)(6,1)(7,1)(8,3)]
+14==> [(0,1)(1,1)(2,1)(3,1)(4,3)(5,4)(6,4)(7,1)(8,3)(9,2)]
+15==> [(0,2)(2,1)(3,4)(4,1)(5,1)(6,2)(7,5)(8,3)(9,2)]
+
+ZMap
+ 0==>[2] 1==>[3] 2==>[2] 3==>[1] 4==>[3] 5==>[8] 6==>[6] 7==>[1] 8==>[0] 9==>[4] 10==>[3] 11==>[0] 12==>[3] 13==>[8] 14==>[4] 15==>[5]
+
+Overlay Map
+
+0==> [(1,2)(3,3)(4,3)(5,3)(6,3)(7,1)(8,2)(9,1)]
+1==> [(0,1)(1,2)(2,2)(4,1)(5,1)(6,4)(7,2)(8,5)(9,1)]
+2==> [(1,4)(4,6)(5,4)(7,2)(9,4)]
+3==> [(0,2)(2,2)(3,2)(4,1)(5,4)(6,3)(7,2)(8,1)(9,1)]
+4==> [(0,1)(1,1)(2,4)(4,2)(5,3)(6,1)(7,2)(8,5)(9,1)]
+5==> [(0,1)(1,1)(2,1)(3,3)(4,2)(5,5)(6,2)(7,2)(9,1)]
+6==> [(0,2)(1,3)(2,3)(3,1)(5,3)(8,1)(9,6)]
+7==> [(0,2)(3,2)(4,4)(5,2)(6,5)(7,1)(8,1)(9,2)]
+8==> [(1,2)(3,2)(4,6)(5,5)(7,4)(9,1)]
+9==> [(0,2)(1,2)(2,1)(3,2)(5,2)(6,1)(7,4)(8,1)(9,2)]
+10==> [(0,3)(1,4)(2,3)(4,1)(5,2)(6,2)(7,1)(8,1)(9,1)]
+11==> [(1,4)(2,4)(4,3)(5,1)(6,2)(7,2)(8,1)(9,2)]
+12==> [(0,2)(1,2)(2,1)(4,3)(5,1)(6,4)(7,2)(8,5)]
+13==> [(0,3)(1,1)(2,3)(3,4)(4,2)(5,3)(6,1)(7,1)]
+14==> [(0,1)(1,1)(2,1)(3,1)(5,4)(6,4)(7,1)(8,3)(9,2)]
+15==> [(0,2)(2,1)(3,4)(4,1)(6,2)(7,5)(8,3)(9,2)]
+
+answer string (after overlaps) is 3845859647118357
+		
+aaaaarggggh!
+ */
